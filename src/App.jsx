@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Form, InputGroup, Table } from 'react-bootstrap'
-import { data } from './Data'
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Form, InputGroup, Table } from 'react-bootstrap';
+import { data } from './Data';
 
 const App = () => {
-  const [search, setSearch] = useState('')
-  console.log(search);
+  const [search, setSearch] = useState('');
+
   return (
     <div className='App'>
       <Container>
@@ -13,7 +13,10 @@ const App = () => {
         <Form>
           <InputGroup className='my-3'>
             <Form.Control
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                const searchValue = e.target.value;
+                setSearch(searchValue);
+              }}
               placeholder='Search contacts' />
           </InputGroup>
         </Form>
@@ -27,10 +30,14 @@ const App = () => {
             </tr>
           </thead>
           <tbody>
-
             {data.filter((item) => {
-              return search.toLocaleLowerCase() === '' ? item
-                : item.first_name.toLocaleLowerCase().includes(search); 
+              const firstNameMatches = item.first_name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+              const lastNameMatches = item.last_name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+              
+              if (firstNameMatches || lastNameMatches) {
+                return true;
+              }
+              return false;
             }).map((item) => (
               <tr key={item.id}>
                 <td>{item.first_name}</td>
@@ -39,12 +46,11 @@ const App = () => {
                 <td>{item.phone}</td>
               </tr>
             ))}
-
           </tbody>
         </Table>
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
